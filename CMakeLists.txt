@@ -31,7 +31,8 @@ add_custom_command(
 
 list(APPEND SOURCES
     "${PROJECT_SOURCE_DIR}/src/main.c"
-#	"${PROJECT_SOURCE_DIR}/src/i2c_util.c"
+    "${PROJECT_SOURCE_DIR}/src/buttons.c"
+	"${PROJECT_SOURCE_DIR}/src/i2c_util.c"
 )
 
 target_sources(app PRIVATE ${SOURCES})

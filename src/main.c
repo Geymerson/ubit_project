@@ -7,6 +7,8 @@
 #include <sensor.h>
 #include <stdio.h>
 
+
+#include "buttons.h"
 // #include "version.h"
 // #include "i2c_util.h"
 
@@ -20,8 +22,14 @@
 // #define COMPASS_WHO_AM_I_REG 0x07
 // #define COMPASS_TEST_VALUE   0xC4
 
-
 void main(void) {
+
+	configure_buttons();
+
+	while(1) {
+
+	}
+	
 	//struct mb_display *disp = mb_display_get();
 	
 	//Scrolling text ("ECOM042.2017.2")
