@@ -22,12 +22,141 @@
 // #define COMPASS_WHO_AM_I_REG 0x07
 // #define COMPASS_TEST_VALUE   0xC4
 
+static struct mb_display *disp;
+static s64_t a_timestamp;
+static s64_t b_timestamp;
+static uint16_t sleep_interval = 8000;
+
+typedef enum {
+	HELLO,
+	TEMP,
+	ACCEL,
+	MAG,
+	BLTH
+} state_t;
+
+typedef enum {
+    NEXT,
+    PREVIOUS,
+    CURRENT
+} event_t;
+
+typedef struct {
+    state_t events[3];
+    void (*action)(void);
+} mstate_t;
+
+static event_t current_event = CURRENT;
+
+int event_changed = 0;
+
+//Scrolling text ("ECOM042.2017.2")
+void hello_world() {
+	current_event = CURRENT;
+    printf("ECOM042.2017.2\n");	
+	mb_display_print(disp, MB_DISPLAY_MODE_DEFAULT | MB_DISPLAY_FLAG_LOOP, K_MSEC(500), "ECOM042.2017.2");	
+    event_changed = 0;
+}
+
+// K_THREAD_DEFINE(hello_world_id, 128, hello_world, NULL, NULL, NULL, 7, 0, K_NO_WAIT);
+
+int r;
+struct sensor_value temp_value;
+struct device *temp_dev;
+void temperature_read() {
+    printf("Reading temperature!\n");
+	current_event = CURRENT;
+    event_changed = 0;
+	sleep_interval = 5000;
+
+	r = sensor_sample_fetch(temp_dev);
+	if (r) {
+		printf("sensor_sample_fetch failed return: %d\n", r);
+		return;
+	}
+
+	r = sensor_channel_get(temp_dev, SENSOR_CHAN_TEMP, &temp_value);
+	if (r) {
+		printf("sensor_channel_get failed return: %d\n", r);
+		return;
+	}
+
+	printf("Temperature is %gC\n", sensor_value_to_double(&temp_value));
+}
+
+void accelerometer_read() {
+    printf("Reading acceleration data\n");
+	current_event = CURRENT;
+    event_changed = 0;
+}
+
+void magnetometer_read() {
+    printf("Reading magnetometer data\n");
+	current_event = CURRENT;
+    event_changed = 0;
+}
+
+void connect_to_bluetooth() {
+    printf("Connecting to bluetooth...\n");
+	current_event = CURRENT;
+    event_changed = 0;
+
+}
+
+void button_pressed(struct device *dev, struct gpio_callback *cb, u32_t pins) {
+	/* Filter out spurious presses */
+	if (pins & BIT(SW0_GPIO_PIN)) {
+		printk("A pressed\n");
+		current_event = PREVIOUS;
+		if (k_uptime_delta(&a_timestamp) < K_MSEC(100)) {
+			printk("Too quick A presses\n");
+			return;
+		}
+	} else {
+		current_event = NEXT;
+		printk("B pressed\n");
+		if (k_uptime_delta(&b_timestamp) < K_MSEC(100)) {
+			printk("Too quick B presses\n");
+			return;
+		}
+	}
+	event_changed = 1;
+}
+
+mstate_t machine[] = {
+    { .events = {TEMP, BLTH, HELLO}, .action = hello_world},
+    { .events = {ACCEL, HELLO, TEMP}, .action = temperature_read},
+    { .events = {MAG, TEMP, ACCEL}, .action = accelerometer_read},
+    { .events = {BLTH, ACCEL, MAG}, .action = magnetometer_read},
+    { .events = {HELLO, MAG, BLTH}, .action = connect_to_bluetooth}
+};
+
 void main(void) {
 
+	//Setup buttons	
 	configure_buttons();
 
-	while(1) {
+	//Setup temperature sensor	
+	printf("Thermometer Example! %s\n", CONFIG_ARCH);
+	temp_dev = device_get_binding("TEMP_0");
+	if (!temp_dev) {
+		printf("error: no temp device\n");
+		return;
+	}
+	printf("temp device is %p, name is %s\n", temp_dev, temp_dev->config->name);
 
+	//Setup the display
+	disp = mb_display_get();
+
+	//Set the current state
+	static state_t current_state = HELLO;
+
+	while (1) {
+        if(event_changed) {      
+            current_state = machine[current_state].events[current_event];            
+        }
+		machine[current_state].action();
+		k_sleep(sleep_interval);
 	}
 	
 	//struct mb_display *disp = mb_display_get();

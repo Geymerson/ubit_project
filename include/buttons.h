@@ -3,9 +3,6 @@
 #include <board.h>
 #include <gpio.h>
 #include <device.h>
-//#include <display/mb_display.h>
-//#include <sensor.h>
-//#include <stdio.h>
 
 void configure_buttons(void);
 

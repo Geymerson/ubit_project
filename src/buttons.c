@@ -1,25 +1,5 @@
 #include "buttons.h"
 
-static s64_t a_timestamp;
-static s64_t b_timestamp;
-
-void button_pressed(struct device *dev, struct gpio_callback *cb, u32_t pins) {
-	/* Filter out spurious presses */
-	if (pins & BIT(SW0_GPIO_PIN)) {
-		printk("A pressed\n");
-		if (k_uptime_delta(&a_timestamp) < K_MSEC(100)) {
-			printk("Too quick A presses\n");
-			return;
-		}
-	} else {
-		printk("B pressed\n");
-		if (k_uptime_delta(&b_timestamp) < K_MSEC(100)) {
-			printk("Too quick B presses\n");
-			return;
-		}
-	}
-}
-
 void configure_buttons(void) {
 	static struct gpio_callback button_cb;
 	struct device *gpio;
