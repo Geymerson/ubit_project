@@ -9,18 +9,19 @@
 
 
 #include "buttons.h"
-// #include "version.h"
-// #include "i2c_util.h"
 
-// struct i2c_dev acc, compass;
+#include "version.h"
+#include "i2c_util.h"
 
-// #define ACC_DEV_ADDR     0x1D
-// #define ACC_WHO_AM_I_REG 0x0D
-// #define ACC_TEST_VALUE   0x5A
+struct i2c_dev acc, compass;
 
-// #define COMPASS_DEV_ADDR     0x0e
-// #define COMPASS_WHO_AM_I_REG 0x07
-// #define COMPASS_TEST_VALUE   0xC4
+#define ACC_DEV_ADDR     0x1D
+#define ACC_WHO_AM_I_REG 0x0D
+#define ACC_TEST_VALUE   0x5A
+
+#define COMPASS_DEV_ADDR     0x0e
+#define COMPASS_WHO_AM_I_REG 0x07
+#define COMPASS_TEST_VALUE   0xC4
 
 static struct mb_display *disp;
 static s64_t a_timestamp;
@@ -151,26 +152,58 @@ void main(void) {
 	//Set the current state
 	static state_t current_state = HELLO;
 
-	while (1) {
-        if(event_changed) {      
-            current_state = machine[current_state].events[current_event];            
-        }
-		machine[current_state].action();
-		k_sleep(sleep_interval);
-	}
+	// while (1) {
+    //     if(event_changed) {      
+    //         current_state = machine[current_state].events[current_event];            
+    //     }
+	// 	machine[current_state].action();
+	// 	k_sleep(sleep_interval);
+	// }
 	
 	//struct mb_display *disp = mb_display_get();
 	
 	//Scrolling text ("ECOM042.2017.2")
 //	mb_display_print(disp, MB_DISPLAY_MODE_DEFAULT | MB_DISPLAY_FLAG_LOOP, K_MSEC(500), "ECOM042.2017.2");
 
-	// SYS_LOG_WRN("Firmware version: v%d.%d.%d",
-    //                     VERSION_MAJOR, VERSION_MINOR, VERSION_BUILD);
+	SYS_LOG_WRN("Firmware version: v%d.%d.%d",
+                        VERSION_MAJOR, VERSION_MINOR, VERSION_BUILD);
 
-	// i2c_util_dev_init(&acc, ACC_DEV_ADDR, "ACC", ACC_WHO_AM_I_REG,
-    //                             ACC_TEST_VALUE);
-	// i2c_util_dev_init(&compass, COMPASS_DEV_ADDR, "COMPASS",
-    //                             COMPASS_WHO_AM_I_REG, COMPASS_TEST_VALUE);
+	//CTRL_REG = 0x2A
+	i2c_util_dev_init(&acc, ACC_DEV_ADDR, "ACC", ACC_WHO_AM_I_REG,
+                                ACC_TEST_VALUE);
+
+	//CTRL_REG = 0x10
+	i2c_util_dev_init(&compass, COMPASS_DEV_ADDR, "COMPASS",
+                                COMPASS_WHO_AM_I_REG, COMPASS_TEST_VALUE);
+	i2c_util_test_connection(&acc);
+	u8_t temp = 1;
+	// i2c_util_write_bytes(&acc, 0x2A, &temp, sizeof(u8_t));
+	i2c_util_write_bytes(&compass, 0x10, &temp, sizeof(u8_t));
+		
+	u8_t data[2];
+	while (1) {
+		// //X_LSB = 0x2 | Y_LSB = 0x4 | Z_LSB = 0x6
+		// i2c_util_read_bytes(&acc, 0x2, data, sizeof(data));
+		// SYS_LOG_DBG("ACC X: %d", (data[1] << 8) | data[0]);
+
+		// i2c_util_read_bytes(&acc, 0x4, data, sizeof(data));
+		// SYS_LOG_DBG("ACC Y: %d", (data[1] << 8) | data[0]);
+
+		// i2c_util_read_bytes(&acc, 0x6, data, sizeof(data));
+		// SYS_LOG_DBG("ACC Z: %d\n", (data[1] << 8) | data[0]);
+
+		i2c_util_read_bytes(&compass, 0x2, data, sizeof(data));
+		SYS_LOG_DBG("COMPASS X: %d", (data[1] << 8) | data[0]);
+
+		i2c_util_read_bytes(&compass, 0x4, data, sizeof(data));
+		SYS_LOG_DBG("COMPASS Y: %d", (data[1] << 8) | data[0]);
+
+		i2c_util_read_bytes(&compass, 0x6, data, sizeof(data));
+		SYS_LOG_DBG("COMPASS Z: %d\n", (data[1] << 8) | data[0]);
+		k_sleep(500);
+	}						
+
+
 /**
 	struct device *temp_dev;
 

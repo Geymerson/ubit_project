@@ -60,7 +60,7 @@ int i2c_util_write_bytes(struct i2c_dev *i2c_dev, u8_t reg, u8_t *data, u32_t nu
         msgs[1].len = num_bytes;
         msgs[1].flags = I2C_MSG_WRITE | I2C_MSG_STOP;
 
-        return i2c_transfer(i2c_dev->dev, &msgs[0], 2, i2c_dev->addr);
+        return i2c_transfer(i2c_dev->dev, &msgs[0], 2, i2c_dev->addr);//2
 }
 
 int i2c_util_read_bytes(struct i2c_dev *i2c_dev, u8_t reg, u8_t *data, u32_t num_bytes)

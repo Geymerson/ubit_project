@@ -22,8 +22,7 @@ struct i2c_dev {
         u8_t reg_test_expected_val;
 };
 
-int i2c_util_dev_init(struct i2c_dev *i2c_dev, u16_t addr, const char *name,
-                        u8_t reg_test, u8_t reg_test_expected_val);
+int i2c_util_dev_init(struct i2c_dev *i2c_dev, u16_t addr, const char *name, u8_t reg_test, u8_t reg_test_expected_val);
 int i2c_util_write_bytes(struct i2c_dev *i2c_dev, u8_t reg, u8_t *data, u32_t num_bytes);
 int i2c_util_read_bytes(struct i2c_dev *i2c_dev, u8_t reg, u8_t *data, u32_t num_bytes);
 int i2c_util_test_connection(struct i2c_dev *i2c_dev);
