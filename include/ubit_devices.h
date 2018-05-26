@@ -7,11 +7,6 @@
     read data and print to microbit's display.
 */
 
-// #include <zephyr.h>
-// #include <misc/printk.h>
-// #include <board.h>
-// #include <gpio.h>
-// #include <device.h>
 #include <display/mb_display.h>
 #include <sensor.h>
 
