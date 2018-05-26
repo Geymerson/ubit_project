@@ -199,7 +199,7 @@ void print_compass_direction() {
 
 void connect_to_bluetooth() {
     printk("No bluetooth interface implemented.\n");    
-    printk("Connection could not be stablished....\n");
+    printk("Connection could not be stablished...\n");
     __sleep_time = 1000;
 }
 

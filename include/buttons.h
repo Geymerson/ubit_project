@@ -1,8 +1,8 @@
-#include <zephyr.h>
-#include <misc/printk.h>
+// #include <zephyr.h>
+// #include <misc/printk.h>
 #include <board.h>
 #include <gpio.h>
-#include <device.h>
+// #include <device.h>
 
 void configure_buttons(void);
 

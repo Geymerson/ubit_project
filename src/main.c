@@ -31,7 +31,7 @@ static s64_t b_timestamp;
 void button_pressed(struct device *dev, struct gpio_callback *cb, u32_t pins) {
 	/* Filter out spurious presses */
 	if (pins & BIT(SW0_GPIO_PIN)) {
-		printk("Changing to previous state. Please, wait a while...\n");
+		printk("\nChanging to previous state.\nPlease, wait a while...\n\n");
 		current_event = PREVIOUS;
 		if (k_uptime_delta(&a_timestamp) < K_MSEC(100)) {
 			printk("Too quick A presses\n");
@@ -39,7 +39,7 @@ void button_pressed(struct device *dev, struct gpio_callback *cb, u32_t pins) {
 		}
 	} else {
 		current_event = NEXT;
-		printk("Changing to next state. Please, wait a while...\n");
+		printk("\nChanging to next state.\nPlease, wait a while...\n\n");
 		if (k_uptime_delta(&b_timestamp) < K_MSEC(100)) {
 			printk("Too quick B presses\n");
 			return;
