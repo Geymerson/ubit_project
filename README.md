@@ -1,10 +1,11 @@
 # ubit_project
 ECOM042: Embedded Systems Project
 
-Make sure to install zephyr and all it's required dependencies in your system in order to run this project.
-http://docs.zephyrproject.org/getting_started/getting_started.html
+In order to run this project, make sure to install zephyr and the required dependencies in your system.
 
-After everything is setup, enter the project directory and execute the commands below to build and run (linux/macOS):
+[Zephyr RTOS](http://docs.zephyrproject.org/getting_started/getting_started.html)
+
+Download or clone this project, open the file /ubit_project/CMakeLists.txt and modify lines 1, 2 and 3 to your current zephyr and zephyr-sdk installation path. After everything is setup, enter the /ubit_project/ directory and execute the commands below to build and run (linux/macOS):
 
 	$ mkdir build && cd build
 	$ cmake ..
