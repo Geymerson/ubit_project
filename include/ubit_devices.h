@@ -93,21 +93,21 @@ void read_accelerometer();
 /*! \fn void get_accelerometer_x()
     \brief Return accelerometer's x value
 
-    Before using this function, read_accelerometer() should be called.
+    Before use this function, read_accelerometer() must be called.
 */
 u16_t get_accelerometer_x();
 
 /*! \fn void get_accelerometer_y()
     \brief Return accelerometer's y value
 
-    Before using this function, read_accelerometer() should be called.
+    Before use this function, read_accelerometer() must be called.
 */
 u16_t get_accelerometer_y();
 
 /*! \fn void get_accelerometer_z()
     \brief Return accelerometer's z value
 
-    Before using this function, read_accelerometer() should be called.
+    Before use this function, read_accelerometer() must be called.
 */
 u16_t get_accelerometer_z();
 
@@ -149,21 +149,21 @@ void read_magnetometer();
 /*! \fn u16_t read_compass_x()
     \brief Return magnetometer's x value
 
-    Before using this function, read_magnetometer() should be called.
+    Before use this function, read_magnetometer() must be called.
 */
 u16_t read_compass_x();
 
 /*! \fn u16_t read_compass_y()
     \brief Return magnetometer's y value
 
-    Before using this function, read_magnetometer() should be called.
+    Before use this function, read_magnetometer() must be called.
 */
 u16_t read_compass_y();
 
 /*! \fn u16_t read_compass_z()
     \brief Return magnetometer's z value
 
-    Before using this function, read_magnetometer() should be called.
+    Before use this function, read_magnetometer() must be called.
 */
 u16_t read_compass_z();
 
